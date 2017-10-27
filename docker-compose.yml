@@ -28,18 +28,6 @@ services:
       PHP_IDE_CONFIG: "serverName=api.shoppytouch.local"
     networks:
       - shoppytouch_api
-    links:
-      - workspace
-    volumes:
-      - type: bind
-        source: ./
-        target: /var/www
-
-  workspace:
-    container_name: shoppytouch-ws
-    build:
-      context: ./_docker/workspace
-    tty: true
     volumes:
       - type: bind
         source: ./
