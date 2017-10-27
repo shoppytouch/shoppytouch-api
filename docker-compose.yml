@@ -1,0 +1,49 @@
+version: '3.3'
+
+services:
+  nginx:
+    container_name: shoppytouch-nginx
+    build: ./_docker/nginx
+    expose:
+      - "80"
+      - "443"
+    ports:
+      - "8080:80"
+      - "4343:443"
+    links:
+      - php
+    networks:
+      - shoppytouch_api
+    volumes:
+      - type: bind
+        source: ./
+        target: /var/www
+
+  php:
+    container_name: shoppytouch-php
+    build: ./_docker/php-fpm
+    expose:
+      - "9000"
+    environment:
+      PHP_IDE_CONFIG: "serverName=api.shoppytouch.local"
+    networks:
+      - shoppytouch_api
+    links:
+      - workspace
+    volumes:
+      - type: bind
+        source: ./
+        target: /var/www
+
+  workspace:
+    container_name: shoppytouch-ws
+    build:
+      context: ./_docker/workspace
+    tty: true
+    volumes:
+      - type: bind
+        source: ./
+        target: /var/www
+
+networks:
+  shoppytouch_api:
