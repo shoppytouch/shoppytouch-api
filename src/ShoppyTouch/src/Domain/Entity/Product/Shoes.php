@@ -8,12 +8,14 @@
  * @copyright Copyright (c) 2017 Shoppy Touch. (https://shoppytouch.com)
  */
 
-use Zend\ConfigAggregator\ConfigAggregator;
+namespace ShoppyTouch\Domain\Entity\Product;
 
-return [
-    ConfigAggregator::ENABLE_CACHE => false,
-    'cache' => [
-        'host' => '%%CACHE_HOST%%',
-        'port' => '%%CACHE_PORT%%',
-    ],
-];
+/**
+ * Class Shoes
+ *
+ * @package ShoppyTouch\Domain\Entity\Product
+ */
+class Shoes extends AbstractProduct
+{
+
+}

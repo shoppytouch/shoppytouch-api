@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+    http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="ShoppyTouch\Domain\Entity\User\AbstractUser" table="user" inheritance-type="JOINED">
+        <discriminator-column name="discr" type="string" />
+        <discriminator-map>
+            <discriminator-mapping value="owner" class="ShoppyTouch\Domain\Entity\User\Owner" />
+            <discriminator-mapping value="manager" class="ShoppyTouch\Domain\Entity\User\Manager" />
+            <discriminator-mapping value="employee" class="ShoppyTouch\Domain\Entity\User\Employee" />
+        </discriminator-map>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="timestampOnCreate"/>
+        </lifecycle-callbacks>
+        <id name="id" column="id" type="uuid">
+            <generator strategy="CUSTOM"/>
+            <custom-id-generator class="Ramsey\Uuid\Doctrine\UuidGenerator" />
+        </id>
+        <field name="firstName" column="first_name" type="string" />
+        <field name="lastName" column="lastName" type="string" />
+        <field name="email" column="email" type="string" unique="true" />
+        <field name="password" column="password" type="string" />
+        <field name="gender" column="gender" type="string" />
+        <field name="dob" column="dob" type="datetime" />
+        <field name="createdAt" column="created_at" type="datetime" />
+        <field name="updatedAt" column="updated_at" type="datetime" nullable="true" />
+        <one-to-one field="registration" target-entity="ShoppyTouch\Domain\Entity\Registration" mapped-by="user" />
+    </entity>
+</doctrine-mapping>

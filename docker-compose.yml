@@ -5,11 +5,11 @@ services:
     container_name: shoppytouch-nginx
     build: ./_docker/nginx
     expose:
-      - "80"
-      - "443"
+      - 80
+      - 443
     ports:
-      - "8080:80"
-      - "4343:443"
+      - 8080:80
+      - 4343:443
     links:
       - php
     networks:
@@ -23,7 +23,7 @@ services:
     container_name: shoppytouch-php
     build: ./_docker/php-fpm
     expose:
-      - "9000"
+      - 9000
     environment:
       PHP_IDE_CONFIG: "serverName=api.shoppytouch.local"
     networks:
@@ -33,5 +33,50 @@ services:
         source: ./
         target: /var/www
 
+  mysql:
+    container_name: shoppytouch-mysql
+    build: ./_docker/mysql
+    expose:
+      - 3306
+    ports:
+      - 3307:3306
+    volumes:
+      - volume_db:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: shoppytouch
+      MYSQL_USER: st-user
+      MYSQL_PASSWORD: iloverandompasswordsbutthisonewilldo
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - shoppytouch_api
+
+  search:
+    container_name: shoppytouch-search
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.3
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - network.bind_host=0.0.0.0
+      - discovery.zen.minimum_master_nodes=1
+      - cluster.name=shoppytouch-cluster
+    ports:
+      - 9200:9200
+    networks:
+      - shoppytouch_api
+    volumes:
+      - volume_se:/usr/share/elasticsearch/data
+
+  cache:
+    container_name: shoppytouch-cache
+    image: memcached:latest
+    ports:
+      - 11211:11211
+    environment:
+      MEMCACHED_HOST: memcached
+      MEMCACHED_PORT: 11211
+
 networks:
   shoppytouch_api:
+
+volumes:
+  volume_db:
+  volume_se:

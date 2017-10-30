@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+    http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="ShoppyTouch\Domain\Entity\Product\AbstractProduct" table="product" inheritance-type="JOINED">
+        <discriminator-column name="discr" type="string" />
+        <discriminator-map>
+            <discriminator-mapping value="clothing" class="ShoppyTouch\Domain\Entity\Product\Clothing" />
+            <discriminator-mapping value="shoes" class="ShoppyTouch\Domain\Entity\Product\Shoes" />
+            <discriminator-mapping value="wine" class="ShoppyTouch\Domain\Entity\Product\Wine" />
+        </discriminator-map>
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="timestampOnCreate"/>
+        </lifecycle-callbacks>
+        <id name="id" column="id" type="uuid">
+            <generator strategy="CUSTOM"/>
+            <custom-id-generator class="Ramsey\Uuid\Doctrine\UuidGenerator" />
+        </id>
+        <field name="designation" column="designation" type="string" />
+        <field name="description" column="description" type="string" />
+        <field name="sku" column="sky" type="string" unique="true" />
+        <field name="ean13" column="ean13" type="string" unique="true" />
+        <field name="price" column="price" type="integer" />
+        <field name="vat" column="vat" type="decimal" scale="5" precision="2" />
+        <field name="size" column="string" type="string" />
+        <field name="active" column="active" type="boolean">
+            <options>
+                <option name="comment">Is the product active</option>
+                <option name="default">1</option>
+            </options>
+        </field>
+        <field name="createdAt" column="created_at" type="datetime" />
+        <field name="updatedAt" column="updated_at" type="datetime" nullable="true" />
+        <many-to-one target-entity="ShoppyTouch\Domain\Entity\Brand" field="brand" inversed-by="products">
+            <join-column name="brand_id" referenced-column-name="id" nullable="false" on-delete="CASCADE" />
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

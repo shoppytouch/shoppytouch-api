@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+        xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+    http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+    <entity name="ShoppyTouch\Domain\Entity\Shop" table="shop">
+        <lifecycle-callbacks>
+            <lifecycle-callback type="prePersist" method="timestampOnCreate"/>
+        </lifecycle-callbacks>
+        <id name="id" column="id" type="uuid">
+            <generator strategy="CUSTOM"/>
+            <custom-id-generator class="Ramsey\Uuid\Doctrine\UuidGenerator" />
+        </id>
+        <field name="name" column="name" type="string" />
+        <many-to-one field="address" target-entity="ShoppyTouch\Domain\Entity\Address">
+            <join-column name="address_id" referenced-column-name="id" on-delete="RESTRICT" />
+        </many-to-one>
+        <many-to-many field="employees" target-entity="ShoppyTouch\Domain\Entity\User\Employee" inversed-by="shops">
+            <join-table name="shop_has_employee">
+                <join-columns>
+                    <join-column name="shop_id" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="employee_id" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+            <cascade>
+                <cascade-remove/>
+            </cascade>
+            <order-by>
+                <order-by-field name="lastName" direction="ASC" />
+            </order-by>
+        </many-to-many>
+        <many-to-many field="managers" target-entity="ShoppyTouch\Domain\Entity\User\Manager" inversed-by="shops">
+            <join-table name="shop_has_manager">
+                <join-columns>
+                    <join-column name="shop_id" referenced-column-name="id"/>
+                </join-columns>
+                <inverse-join-columns>
+                    <join-column name="manager_id" referenced-column-name="id"/>
+                </inverse-join-columns>
+            </join-table>
+            <cascade>
+                <cascade-remove/>
+            </cascade>
+            <order-by>
+                <order-by-field name="lastName" direction="ASC" />
+            </order-by>
+        </many-to-many>
+        <many-to-one field="owner" target-entity="ShoppyTouch\Domain\Entity\User\Owner" inversed-by="shops">
+            <join-column name="owner_id" referenced-column-name="id" on-delete="RESTRICT" />
+        </many-to-one>
+    </entity>
+</doctrine-mapping>

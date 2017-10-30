@@ -1,0 +1,26 @@
+<?php
+/**
+ * Shoppy Touch
+ *
+ * @version   1.0
+ * @author    Julien Guittard <julien@shoppytouch.com>
+ * @see       https://github.com/shoppytouch/shoppytouch-api for the canonical source repository
+ * @copyright Copyright (c) 2017 Shoppy Touch. (https://shoppytouch.com)
+ */
+
+return [
+    'doctrine' => [
+        'connection' => [
+            'orm_default' => [
+                'params' => [
+                    'host'      => '%%DB_HOST%%',
+                    'port'      => '%%DB_PORT%%',
+                    'user'      => '%%DB_USER%%',
+                    'charset'   => '%%DB_CHARSET%%',
+                    'password'  => '%%DB_PASSWORD%%',
+                    'dbname'    => '%%DB_DATABASE%%',
+                ],
+            ],
+        ],
+    ],
+];

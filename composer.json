@@ -16,6 +16,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/ezimuel/zend-expressive-authentication"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/jguittard/zend-expressive-doctrine"
         }
     ],
     "require": {
@@ -24,6 +28,7 @@
         "http-interop/http-middleware": "^0.4.1",
         "nelmio/alice": "^3.1.0",
         "phing/phing": "2.16",
+        "psr/simple-cache": "~1.0",
         "ramsey/uuid": "^3.7.1",
         "ramsey/uuid-doctrine": "^1.4.1",
         "roave/security-advisories": "dev-master",
@@ -34,6 +39,7 @@
         "zendframework/zend-config-aggregator": "^1.0",
         "zendframework/zend-expressive": "^2.0.5",
         "zendframework/zend-expressive-authentication": "dev-master",
+        "zendframework/zend-expressive-doctrine": "dev-develop",
         "zendframework/zend-expressive-fastroute": "^2.0",
         "zendframework/zend-expressive-hal": "^0.4.1",
         "zendframework/zend-expressive-helpers": "^4.0",

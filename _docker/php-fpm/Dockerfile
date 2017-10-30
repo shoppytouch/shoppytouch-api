@@ -7,23 +7,28 @@ ADD ./shoppytouch-api.pool.conf /usr/local/etc/php-fpm.d/
 
 RUN mkdir -p /usr/local/bin
 
-RUN apt-get update && apt-get install -y \
-    libpq-dev \
-    curl \
-    libpng12-dev \
-    libfreetype6-dev \
-    libjpeg62-turbo-dev \
-    libssl-dev \
-    libmcrypt-dev \
-    libicu-dev \
-    --no-install-recommends \
-    && rm -r /var/lib/apt/lists/*
-
-# configure gd library
-RUN docker-php-ext-configure gd \
-    --enable-gd-native-ttf \
-    --with-freetype-dir=/usr/include/freetype2 \
-    --with-jpeg-dir=/usr/include/
+RUN apt-get update \
+    && buildDeps=" \
+        git \
+        libpq-dev \
+        curl \
+        libpng12-dev \
+        libjpeg62-turbo-dev \
+        libfreetype6-dev \
+        libssl-dev \
+        libmcrypt-dev \
+        libicu-dev \
+        libmemcached-dev \
+        zlib1g-dev \
+    " \
+    && apt-get install -y $buildDeps --no-install-recommends \
+    \
+    && docker-php-source extract \
+    && git clone --branch php7 https://github.com/php-memcached-dev/php-memcached /usr/src/php/ext/memcached/ \
+    && docker-php-ext-install memcached \
+    && docker-php-ext-configure gd \
+           --enable-gd-native-ttf \
+           --with-freetype-dir=/usr/include/freetype2
 
 # Install extensions using the helper script provided by the base image
 RUN docker-php-ext-install \
@@ -31,7 +36,8 @@ RUN docker-php-ext-install \
     gd \
     intl \
     mcrypt \
-    opcache
+    opcache \
+    memcached
 
 # Install xdebug
 RUN pecl install xdebug \
@@ -44,6 +50,16 @@ RUN pecl install xdebug \
     && echo "xdebug.profiler_enable = on" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && echo "xdebug.remote_log='/tmp/xdebug.log'" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
     && echo "xdebug.remote_host = 127.0.0.1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
+RUN docker-php-source delete \
+    && doNotUninstall=" \
+        libmemcached11 \
+        libmemcachedutil2 \
+    " \
+    && apt-mark manual $doNotUninstall \
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $buildDeps
+
+RUN rm -r /var/lib/apt/lists/*
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

@@ -17,6 +17,7 @@ $cacheConfig = [
 ];
 
 $aggregator = new ConfigAggregator([
+    \Zend\Expressive\Doctrine\ConfigProvider::class,
     ShoppyTouch\ConfigProvider::class,
     new ArrayProvider($cacheConfig),
     new PhpFileProvider('config/autoload/{global,local}/*.php'),

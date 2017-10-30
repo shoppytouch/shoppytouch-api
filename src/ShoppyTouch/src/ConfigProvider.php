@@ -44,6 +44,8 @@ class ConfigProvider
         return [
             'factories' => [
                 Action\PingAction::class => InvokableFactory::class,
+                Service\Cache\SimpleCacheAdapter::class => Service\Cache\CacheAdapterFactory::class,
+                'memcached_alias' => Service\Cache\MemcachedFactory::class,
             ],
         ];
     }
